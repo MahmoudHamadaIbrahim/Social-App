@@ -22,7 +22,7 @@ export class NotificationComponent implements OnInit {
 
   loadNotifications(): void {
     this.isLoading = true;
-    const unreadStatus = this.filter === 'unread' ? true : undefined;
+    const unreadStatus = this.filter === 'unread' ? true : false;
 
     this.notificationService.getNotifications(unreadStatus).subscribe({
       next: (res: any) => {
