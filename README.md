@@ -1,59 +1,51 @@
-# Social
+Social Media Interaction & Notification System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.13.
+Overview
 
-## Development server
+This project is a sophisticated, real-time Social Media Dashboard built using Angular 17+. It is designed to handle core social interactions such as post commenting and user notifications with a focus on seamless user experience, high performance, and clean architecture. The application demonstrates the power of standalone components, reactive programming with RxJS, and modern styling with Tailwind CSS.
 
-To start a local development server, run:
+Core Features
+1. Dynamic Notification Management
+The notification system is built to keep users engaged with real-time updates.
 
-```bash
-ng serve
-```
+Filtering Logic: Users can switch between "All" and "Unread" notifications. This involves complex state management to ensure that the UI reflects the correct data subset fetched from the REST API.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Visual Cues: Notifications are categorized by type (Likes, Comments, Shares) using distinct icons and color-coded indicators for better accessibility.
 
-## Code scaffolding
+2. Advanced Commenting System (CRUD)
+A fully functional comment module that allows users to interact with posts dynamically.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Operations: Supports full Create, Read, Update, and Delete operations.
 
-```bash
-ng generate component component-name
-```
+Interactive UI: Features a custom-built, context-aware action menu for editing and deleting comments, designed to mimic major social platforms like Facebook and LinkedIn.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+User-Centric Design: Implemented "Click-Outside" logic and transparent backdrops to ensure menus close intuitively.
 
-```bash
-ng generate --help
-```
+3. Custom Data Transformation
+To enhance readability, I developed custom Angular Pipes:
 
-## Building
+TimeAgo Pipe: Automatically transforms UTC timestamps into human-readable formats (e.g., "5 minutes ago").
 
-To build the project run:
+Date Formatting: Precise formatting for older notifications to display specific dates and times clearly.
 
-```bash
-ng build
-```
+Technical Implementation
+Tech Stack
+Frontend: Angular 17 (Standalone Components, Signals, and Control Flow Syntax).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Styling: Tailwind CSS for responsive and utility-first design.
 
-## Running unit tests
+State Management: RxJS Observables for handling asynchronous data streams.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+HTTP Client: Integrated with Interceptors for global error handling and authentication token injection.
 
-```bash
-ng test
-```
+Challenges & Solutions
+During development, I encountered a significant challenge with GitHub Pages deployment regarding base-href paths. I resolved this by configuring the build process to recognize the subfolder structure of GitHub repositories. Additionally, I optimized API calls by implementing local UI updates (Optimistic UI) to ensure the application feels snappy even on slower connections.
 
-## Running end-to-end tests
+How to Run
+Clone the repository.
 
-For end-to-end (e2e) testing, run:
+Run npm install to install dependencies.
 
-```bash
-ng e2e
-```
+Use ng serve for a dev server.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Navigate to http://localhost:4200/.
