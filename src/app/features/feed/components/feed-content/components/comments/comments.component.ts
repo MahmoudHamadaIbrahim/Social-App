@@ -2,6 +2,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Comment } from './models/comment.interface';
 import { CommentsService } from './service/comments.service';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { comment } from 'postcss';
 
 @Component({
   selector: 'app-comments',
@@ -46,8 +47,10 @@ export class CommentsComponent implements OnInit {
       next: (res: any) => {
         console.log('Replies received:', res);
 
-        const incomingReplies = res.replies;
-        this.repliesMap[commentId] = incomingReplies;
+        this.repliesMap = {
+          ...this.repliesMap,
+          [commentId]: res.data.replies,
+        };
       },
     });
   }
@@ -77,9 +80,6 @@ export class CommentsComponent implements OnInit {
 
   toggleReplyInput(commentId: string): void {
     this.activeCommentId = this.activeCommentId === commentId ? null : commentId;
-
-    const comment = this.commentsList.find((c) => c._id === commentId);
-    const username = comment?.commentCreator?.username || 'user';
 
     if (this.activeCommentId) {
       this.getReplies(commentId);
@@ -111,8 +111,7 @@ export class CommentsComponent implements OnInit {
     this.commentsService.deleteComment(postId, commentId).subscribe({
       next: (res) => {
         this.commentsList = this.commentsList.filter((c) => c._id !== commentId);
-        this.activeCommentMenuId = null;
-        this.getComment();
+        this.activeMenuId = null;
       },
     });
   }
@@ -195,5 +194,30 @@ export class CommentsComponent implements OnInit {
         this.commentsList = res.data.comments;
       },
     });
+  }
+
+  toggleLike(comment: any): void {
+    const userId = this.currentUser._id;
+    if (!comment.likes) comment.likes = [];
+
+    const index = comment.likes.indexOf(userId);
+
+    if (index > -1) {
+      comment.likes.splice(index, 1);
+    } else {
+      comment.likes.push(userId);
+    }
+
+    this.commentsService.toggleCommentLike(this.postId, comment._id).subscribe({
+      next: (res: any) => {
+        if (res.comment?.likes) {
+          comment.likes = res.comment.likes;
+        }
+      },
+    });
+  }
+
+  isLiked(comment: any): boolean {
+    return comment.likes?.includes(this.currentUser._id);
   }
 }

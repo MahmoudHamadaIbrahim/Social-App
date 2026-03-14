@@ -57,30 +57,63 @@
 
             <div class="flex-1">
                 <div class="inline-block bg-[#F0F2F5] px-3 py-2 rounded-[18px] relative group">
-                    <h4 class="font-bold text-[13px] text-slate-900">{{comment.commentCreator.name}}</h4>
-                    <p class="text-[15px] text-[#050505] leading-tight">{{comment.content}}</p>
-
-                    <div
-                        class="absolute -bottom-2 -right-3 bg-white shadow-md rounded-full px-1 py-0.5 flex items-center gap-1 border border-slate-100">
-                        <div
-                            class="bg-[#1877F2] text-white size-4 rounded-full flex items-center justify-center text-[8px]">
-                            <i class="fa-solid fa-thumbs-up"></i>
+                    <div class="flex items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-bold text-[13px] text-slate-900">{{comment.commentCreator.name}}</h4>
+                            <p class="text-[15px] text-[#050505] leading-tight">{{comment.content}}</p>
                         </div>
-                        <span class="text-[11px] font-medium text-slate-500"></span>
+
+                        @if (comment.commentCreator._id === currentUser._id) {
+                        <div class="relative">
+                            <button (click)="toggleMenu(comment._id); $event.stopPropagation()"
+                                class="opacity-0 group-hover:opacity-100 p-2 hover:bg-gray-100 rounded-full cursor-pointer">
+                                <i class="fa-solid fa-ellipsis text-gray-500"></i>
+                            </button>
+
+                            @if (activeMenuId === comment._id) {
+                            <div class="fixed inset-0 w-full h-full bg-black/0 z-[999]" (click)="activeMenuId = null">
+                            </div>
+
+                            <div
+                                class="absolute left-0 mt-1 w-28 bg-white border border-gray-100 rounded-lg shadow-xl z-[1000] py-1 overflow-hidden">
+                                <button (click)="startEditComment(comment, postId)"
+                                    class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-pen text-blue-500 text-[10px]"></i> Edit
+                                </button>
+                                <button (click)="deleteComment(postId, comment._id)"
+                                    class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600 flex items-center gap-2 border-t border-gray-50">
+                                    <i class="fa-solid fa-trash text-[10px]"></i> Delete
+                                </button>
+                            </div>
+                            }
+                        </div>
+                        }
                     </div>
                 </div>
 
                 <div class="flex gap-4 mt-1 ml-2 text-[12px] font-bold text-[#65676B]">
-                    <button class="hover:underline cursor-pointer">Like</button>
-                    <button (click)="toggleReplyInput(comment._id)"
-                        class="hover:underline cursor-pointer">Reply</button>
+                    <button (click)="toggleLike(comment)" [class.text-blue-600]="isLiked(comment)"
+                        class="hover:underline cursor-pointer">Like
+                        @if (comment.likes) {
+                        <span [class.text-blue-600]="isLiked(comment)" class="ml-1 text-[#65676B]">
+                            ({{ comment.likes.length }})
+                        </span>
+                        }
+                    </button>
+                    <button (click)="toggleReplyInput(comment._id)" class="hover:underline cursor-pointer">Reply
+                        @if (comment.repliesCount > 0) {
+                        <span class="ml-1 text-[#65676B]">
+                            ({{ comment.repliesCount }})
+                        </span>
+
+                        }</button>
                     <span class="font-normal">{{comment.createdAt}}</span>
                 </div>
 
 
 
                 <div class="mt-2 space-y-3 relative">
-
+                    @if (activeCommentId === comment._id) {
                     <div class="absolute left-[-22px] top-[-15px] bottom-6 w-[2px] bg-[#CED0D4] rounded-full"></div>
 
                     @for (reply of repliesMap[comment._id]; track reply._id) {
@@ -100,6 +133,7 @@
                             </div>
                         </div>
                     </div>
+                    }
                     }
 
                     @if (activeCommentId === comment._id) {
@@ -132,7 +166,6 @@
             </div>
         </div>
         }
-
 
 
         <div class="flex gap-2.5 mt-4">
