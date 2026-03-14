@@ -1,5 +1,7 @@
 Social Media Interaction & Notification System
+
 Overview
+
 This project is a sophisticated, real-time Social Media Dashboard built using Angular 17+. It is designed to handle core social interactions such as post commenting and user notifications with a focus on seamless user experience, high performance, and clean architecture. The application demonstrates the power of standalone components, reactive programming with RxJS, and modern styling with Tailwind CSS.
 
 Core Features
