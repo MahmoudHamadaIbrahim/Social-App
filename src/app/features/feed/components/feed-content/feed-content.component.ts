@@ -4,10 +4,11 @@ import { Component, inject, OnInit, QueryList, ViewChildren } from '@angular/cor
 import { PostsService } from '../../../../core/services/posts.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommentsComponent } from '././components/comments/comments.component';
+import { TimeAgoPipe } from '../../../../shared/pipes/time-ago-pipe';
 
 @Component({
   selector: 'app-feed-content',
-  imports: [ReactiveFormsModule, CommentsComponent, RouterLink],
+  imports: [ReactiveFormsModule, CommentsComponent, RouterLink, TimeAgoPipe],
   templateUrl: './feed-content.component.html',
   styleUrl: './feed-content.component.css',
 })

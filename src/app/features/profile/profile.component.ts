@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ProfileService } from './service/profile.service';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatePipe],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })

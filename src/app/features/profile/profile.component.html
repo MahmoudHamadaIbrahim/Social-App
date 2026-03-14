@@ -207,7 +207,7 @@
                             </div>
                             <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500">
                                 <i class="fa-regular fa-clock text-[13px]"></i>
-                                {{ post.createdAt }}
+                                {{ post.createdAt | date: 'd MMM, HH:mm' }}
                             </span>
                         </div>
                     </article>

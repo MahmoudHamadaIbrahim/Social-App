@@ -97,7 +97,7 @@
                     <div class="flex items-center text-[13px] text-slate-500 mt-0.5 gap-1">
                         <span class="hover:underline cursor-pointer">@{{post.user.username}}</span>
                         <span>&middot;</span>
-                        <span class="hover:underline cursor-pointer">{{post.createdAt}}</span>
+                        <span class="hover:underline cursor-pointer">{{post.createdAt | timeAgo }}</span>
                         <span>&middot;</span>
 
                         <div
@@ -279,7 +279,8 @@
                                     {{selectedPostForShare.user.name}}
                                 </h4>
                                 <span class="text-[12px] text-slate-500 mt-0.5">
-                                    {{selectedPostForShare.user.username}} &middot; {{selectedPostForShare.createdAt}}
+                                    {{selectedPostForShare.user.username}} &middot; {{selectedPostForShare.createdAt |
+                                    timeAgo }}
                                 </span>
                             </div>
                         </div>

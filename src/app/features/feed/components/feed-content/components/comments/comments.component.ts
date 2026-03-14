@@ -2,11 +2,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Comment } from './models/comment.interface';
 import { CommentsService } from './service/comments.service';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { comment } from 'postcss';
+import { TimeAgoPipe } from '../../../../../../shared/pipes/time-ago-pipe';
 
 @Component({
   selector: 'app-comments',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TimeAgoPipe],
   templateUrl: './comments.component.html',
   styleUrl: './comments.component.css',
 })

@@ -5,7 +5,7 @@ import { NotificationService } from './service/notification.service';
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [DatePipe], 
+  imports: [DatePipe],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.css',
 })
@@ -13,31 +13,28 @@ export class NotificationComponent implements OnInit {
   private notificationService = inject(NotificationService);
 
   notifications: any[] = [];
-  filter: 'all' | 'unread' = 'all'; 
+  filter: 'all' | 'unread' = 'all';
   isLoading: boolean = false;
 
   ngOnInit(): void {
     this.loadNotifications();
   }
 
+  loadNotifications(): void {
+    this.isLoading = true;
+    const unreadStatus = this.filter === 'unread' ? true : undefined;
 
-loadNotifications(): void {
-  this.isLoading = true;
-  const unreadStatus = this.filter === 'unread';
+    this.notificationService.getNotifications(unreadStatus).subscribe({
+      next: (res: any) => {
+        this.notifications = res.data.notifications;
 
-this.notificationService.getNotifications(unreadStatus).subscribe({
-  next: (res: any) => {
-    this.notifications = res.data.notifications; 
-
-    this.isLoading = false;
-  },
-
-});
-  
-}
+        this.isLoading = false;
+      },
+    });
+  }
 
   changeFilter(type: 'all' | 'unread'): void {
-    if (this.filter !== type) { 
+    if (this.filter !== type) {
       this.filter = type;
       this.loadNotifications();
     }

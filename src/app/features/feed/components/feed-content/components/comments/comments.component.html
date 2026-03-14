@@ -107,7 +107,7 @@
                         </span>
 
                         }</button>
-                    <span class="font-normal">{{comment.createdAt}}</span>
+                    <span class="font-normal">{{comment.createdAt | timeAgo}}</span>
                 </div>
 
 
@@ -129,7 +129,7 @@
                             <div class="flex gap-3 mt-1 ml-2 text-[11px] font-bold text-[#65676B]">
                                 <button class="hover:underline">Like</button>
                                 <button class="hover:underline">Reply</button>
-                                <span class="font-normal">{{reply.createdAt}}</span>
+                                <span class="font-normal">{{reply.createdAt | timeAgo }}</span>
                             </div>
                         </div>
                     </div>
