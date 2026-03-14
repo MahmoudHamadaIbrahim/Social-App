@@ -5,7 +5,6 @@ import { PostsService } from '../../../../core/services/posts.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommentsComponent } from '././components/comments/comments.component';
 
-
 @Component({
   selector: 'app-feed-content',
   imports: [ReactiveFormsModule, CommentsComponent, RouterLink],
@@ -14,108 +13,93 @@ import { CommentsComponent } from '././components/comments/comments.component';
 })
 export class FeedContentComponent implements OnInit {
   private readonly postsService = inject(PostsService);
-  private readonly router = inject(Router);
-  content: FormControl = new FormControl("");
-  shareContent: FormControl = new FormControl(''); 
-  privacy: FormControl = new FormControl("public");
+  currentUser = JSON.parse(localStorage.getItem('socialUser')!);
+
+  content: FormControl = new FormControl('');
+  shareContent: FormControl = new FormControl('');
+  privacy: FormControl = new FormControl('public');
   postList: Post[] = [];
-  userName: string = ''; 
-  userImage: string = '';
-  userId: string = "";
   saveFile: File | null = null;
   imgUrl: string | ArrayBuffer | null | undefined;
   isEditMode: boolean = false;
-  editPostId: string = "";
+  editPostId: string = '';
 
   ngOnInit(): void {
     this.getAllPostData();
-    this.userId = JSON.parse(localStorage.getItem('socialUser')!)?._id;
-    this.getUserData();
   }
 
+  confirmShare(e: Event): void {
+    e.preventDefault();
+    if (!this.selectedPostForShare) return;
 
-  
-confirmShare(e: Event): void {
-  e.preventDefault();
-  if (!this.selectedPostForShare) return;
+    const shareData = {
+      body: this.shareContent.value || ' ',
+    };
 
-  const shareData = {
-    body: this.shareContent.value || " ",
-  };
+    const postId = this.selectedPostForShare._id;
 
-  const postId = this.selectedPostForShare._id;
-
-  this.postsService.sharePost(postId, shareData).subscribe({
-  next: (res) => {
-      console.log('Success!', res);
-      this.shareContent.reset();
-    this.closeShareModal();
-    this.getAllPostData();
-  },
-  error: (err) => {
-    console.error('Error!', err);
+    this.postsService.sharePost(postId, shareData).subscribe({
+      next: (res) => {
+        console.log('Success!', res);
+        this.shareContent.reset();
+        this.closeShareModal();
+        this.getAllPostData();
+      },
+      error: (err) => {
+        console.error('Error!', err);
+      },
+    });
   }
-});
-}
-  
+
   @ViewChildren(CommentsComponent) commentComponents!: QueryList<CommentsComponent>;
 
-toggleComments(postId: string) {
-  const targetComponent = this.commentComponents.find(comp => comp.postId === postId);
-  
-  if (targetComponent) {
-    targetComponent.showAllComments = !targetComponent.showAllComments; 
-    targetComponent.isSectionVisible = !targetComponent.isSectionVisible;
-  }
-}
-    
-  getUserData(): void {
-    const savedUser = localStorage.getItem('socialUser'); 
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      this.userName = parsedUser.name;
-      this.userImage = parsedUser.photo; 
+  toggleComments(postId: string) {
+    const targetComponent = this.commentComponents.find((comp) => comp.postId === postId);
+
+    if (targetComponent) {
+      targetComponent.showAllComments = !targetComponent.showAllComments;
+      targetComponent.isSectionVisible = !targetComponent.isSectionVisible;
     }
   }
 
-  myId: string = this.userId;
-  getAllPostData(): void{
+  getAllPostData(): void {
     this.postsService.getAllPosts().subscribe({
-      next:(res)=> {
+      next: (res) => {
         this.postList = res.data.posts.map((post: any) => {
-        return {
-          ...post,
-          isLiked: post.likes ? post.likes.some((u: any) => u._id === this.myId) : false,
-          likesCount: post.likesCount || (post.likes ? post.likes.length : 0)
-        };
-      });
+          return {
+            ...post,
+            isLiked: post.likes
+              ? post.likes.some((u: any) => u._id === this.currentUser._id)
+              : false,
+            likesCount: post.likesCount || (post.likes ? post.likes.length : 0),
+          };
+        });
       },
-      
-    })
+    });
   }
 
   changeImg(e: Event): void {
     const input = e.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-        this.saveFile = input.files[0];
+      this.saveFile = input.files[0];
 
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(this.saveFile);
-        fileReader.onload = (e) => {
-          if (e.target?.result) {
-            this.imgUrl = e.target?.result;
-          }
-        };
-        input.value = '';
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(this.saveFile);
+      fileReader.onload = (e) => {
+        if (e.target?.result) {
+          this.imgUrl = e.target?.result;
+        }
+      };
+      input.value = '';
     }
   }
 
   removeImg(): void {
-  this.imgUrl = '';
-  this.saveFile = undefined as any; 
+    this.imgUrl = '';
+    this.saveFile = null;
   }
 
-  submitForm(e:Event): void {
+  submitForm(e: Event): void {
     e.preventDefault();
     const formData = new FormData();
 
@@ -126,32 +110,31 @@ toggleComments(postId: string) {
       formData.append('privacy', this.privacy.value);
     }
     if (this.saveFile) {
-      formData.append('image', this.saveFile); 
+      formData.append('image', this.saveFile);
     }
 
     this.postsService.createPosts(formData).subscribe({
       next: (res) => {
-        console.log(res)
+        console.log(res);
         if (res.success) {
           this.getAllPostData();
           this.resetForm();
         }
       },
-      
-    })
+    });
   }
 
   resetForm(): void {
-    this.content.reset(); 
-    this.privacy.setValue('public'); 
+    this.content.reset();
+    this.privacy.setValue('public');
     this.imgUrl = '';
     this.saveFile = null;
-    
+
     this.isEditMode = false;
     this.editPostId = '';
   }
 
-  deletePostItem(postId:string): void{
+  deletePostItem(postId: string): void {
     this.postsService.deletePost(postId).subscribe({
       next: (res) => {
         console.log(res);
@@ -159,19 +142,18 @@ toggleComments(postId: string) {
           this.getAllPostData();
         }
       },
-      
-    })
+    });
   }
 
   EditPost(post: any): void {
     this.isEditMode = true;
     this.editPostId = post._id;
 
-    this.content.setValue(post.body); 
+    this.content.setValue(post.body);
     this.privacy.setValue(post.privacy);
 
     if (post.image) {
-      this.imgUrl = post.image;  
+      this.imgUrl = post.image;
     } else {
       this.imgUrl = '';
     }
@@ -181,25 +163,25 @@ toggleComments(postId: string) {
   }
 
   updatePrivacy(postId: string, event: any): void {
-  const newPrivacy = event.target.value;
+    const newPrivacy = event.target.value;
 
-  const formData = new FormData();
-  formData.append('privacy', newPrivacy);
+    const formData = new FormData();
+    formData.append('privacy', newPrivacy);
 
-  this.postsService.updatePost(postId, formData).subscribe({
-    next: (res) => {      
-      const postIndex = this.postList.findIndex(p => p._id === postId);
-      if (postIndex !== -1) {
-        this.postList[postIndex].privacy = newPrivacy;
-      }
-    },
-  });
-}
+    this.postsService.updatePost(postId, formData).subscribe({
+      next: (res) => {
+        const postIndex = this.postList.findIndex((p) => p._id === postId);
+        if (postIndex !== -1) {
+          this.postList[postIndex].privacy = newPrivacy;
+        }
+      },
+    });
+  }
 
   updatePost(e: Event): void {
     e.preventDefault();
-    
-    if (!this.editPostId) return; 
+
+    if (!this.editPostId) return;
 
     const formData = new FormData();
     if (this.content.value) formData.append('body', this.content.value);
@@ -212,7 +194,6 @@ toggleComments(postId: string) {
         this.getAllPostData();
         this.resetForm();
       },
-      
     });
   }
 
@@ -220,35 +201,34 @@ toggleComments(postId: string) {
     this.resetForm();
   }
 
-  selectedPostForShare: any = ""; 
+  selectedPostForShare: any = '';
   isShareModalOpen: boolean = false;
 
-openShareModal(post: any): void {
-  this.selectedPostForShare = post;
-  this.isShareModalOpen = true;
-}
+  openShareModal(post: any): void {
+    this.selectedPostForShare = post;
+    this.isShareModalOpen = true;
+  }
 
-closeShareModal(): void {
-  this.isShareModalOpen = false;
-  this.selectedPostForShare = null;
-}
+  closeShareModal(): void {
+    this.isShareModalOpen = false;
+    this.selectedPostForShare = null;
+  }
 
-onLikeClick(post: any) {
-  this.postsService.changeLike(post._id).subscribe({
-    next: (res) => {
-      console.log('Response:', res);
-      
-      if (res.message === 'success') {
-        post.isLiked = !post.isLiked;
+  onLikeClick(post: any) {
+    this.postsService.changeLike(post._id).subscribe({
+      next: (res) => {
+        console.log('Response:', res);
 
-        if (post.isLiked) {
-          post.likesCount++;
-        } else {
-          post.likesCount--;
+        if (res.message === 'success') {
+          post.isLiked = !post.isLiked;
+
+          if (post.isLiked) {
+            post.likesCount++;
+          } else {
+            post.likesCount--;
+          }
         }
-      }
-    },
-  });
+      },
+    });
+  }
 }
-}
-

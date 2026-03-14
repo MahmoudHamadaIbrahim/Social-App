@@ -1,31 +1,30 @@
-import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Post } from './../../core/models/post.interface';
 import { PostsService } from './../../core/services/posts.service';
 import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, RouterLink, Router } from '@angular/router'; // ضفنا Router عشان لو مسحنا البوست نخرج
-import { CommentsComponent } from "../feed/components/feed-content/components/comments/comments.component";
-import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
+import { CommentsComponent } from '../feed/components/feed-content/components/comments/comments.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [ReactiveFormsModule, CommentsComponent, RouterLink, CommonModule],
+  imports: [ReactiveFormsModule, CommentsComponent, RouterLink],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css',
 })
-export class DetailsComponent implements OnInit , AfterViewInit {
+export class DetailsComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly postsService = inject(PostsService);
   private readonly router = inject(Router);
 
-  postId: string = "";
+  postId: string = '';
   postDetails: Post | null = null;
   userId: string = JSON.parse(localStorage.getItem('socialUser')!)?._id;
 
   content = new FormControl('');
   privacy = new FormControl('public');
   shareContent = new FormControl('');
-  
+
   isEditMode: boolean = false;
   editPostId: string = '';
   imgUrl: string | ArrayBuffer | null = '';
@@ -34,13 +33,6 @@ export class DetailsComponent implements OnInit , AfterViewInit {
   selectedPostForShare: any = null;
 
   @ViewChildren(CommentsComponent) commentComponents!: QueryList<CommentsComponent>;
-
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.openCommentsByDefault();
-    }, 500);
-  }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((param) => {
@@ -69,13 +61,13 @@ export class DetailsComponent implements OnInit , AfterViewInit {
     });
   }
 
-    removeImg(): void {
-  this.imgUrl = '';
-  this.saveFile = undefined as any; 
+  removeImg(): void {
+    this.imgUrl = '';
+    this.saveFile = undefined as any;
   }
 
   toggleComments(postId: string) {
-    const targetComponent = this.commentComponents.find(comp => comp.postId === postId);
+    const targetComponent = this.commentComponents.find((comp) => comp.postId === postId);
     if (targetComponent) {
       targetComponent.showAllComments = !targetComponent.showAllComments;
       targetComponent.isSectionVisible = !targetComponent.isSectionVisible;
@@ -83,13 +75,13 @@ export class DetailsComponent implements OnInit , AfterViewInit {
   }
 
   deletePostItem(postId: string): void {
-      this.postsService.deletePost(postId).subscribe({
-        next: (res) => {
-          if (res.success || res.message === 'success') {
-            this.router.navigate(['/feed']); 
-          }
-        },
-      });
+    this.postsService.deletePost(postId).subscribe({
+      next: (res) => {
+        if (res.success || res.message === 'success') {
+          this.router.navigate(['/feed']);
+        }
+      },
+    });
   }
 
   EditPost(post: any): void {
@@ -112,7 +104,7 @@ export class DetailsComponent implements OnInit , AfterViewInit {
 
     this.postsService.updatePost(this.editPostId, formData).subscribe({
       next: (res) => {
-        this.getPostDetails(); 
+        this.getPostDetails();
         this.resetForm();
       },
     });
@@ -121,13 +113,13 @@ export class DetailsComponent implements OnInit , AfterViewInit {
   confirmShare(e: Event): void {
     e.preventDefault();
     if (!this.selectedPostForShare) return;
-    const shareData = { body: this.shareContent.value || " " };
+    const shareData = { body: this.shareContent.value || ' ' };
     this.postsService.sharePost(this.selectedPostForShare._id, shareData).subscribe({
       next: (res) => {
         this.shareContent.reset();
         this.closeShareModal();
-        this.getPostDetails(); 
-      }
+        this.getPostDetails();
+      },
     });
   }
 
@@ -161,27 +153,27 @@ export class DetailsComponent implements OnInit , AfterViewInit {
   }
 
   openCommentsByDefault() {
-  const targetComponent = this.commentComponents.find(comp => comp.postId === this.postId);
-  
-  if (targetComponent) {
-    targetComponent.isSectionVisible = true; 
-    targetComponent.showAllComments = true;  
-    targetComponent?.getComment();
+    const targetComponent = this.commentComponents.find((comp) => comp.postId === this.postId);
+
+    if (targetComponent) {
+      targetComponent.isSectionVisible = true;
+      targetComponent.showAllComments = true;
+      targetComponent?.getComment();
     }
   }
-  
+
   updatePrivacy(postId: string, event: any): void {
-  const newPrivacy = event.target.value; 
+    const newPrivacy = event.target.value;
 
-  const formData = new FormData();
-  formData.append('privacy', newPrivacy);
+    const formData = new FormData();
+    formData.append('privacy', newPrivacy);
 
-  this.postsService.updatePost(postId, formData).subscribe({
-    next: (res) => {
-      if (this.postDetails) {
-        this.postDetails.privacy = newPrivacy;
-      }
-    },
-  });
-}
+    this.postsService.updatePost(postId, formData).subscribe({
+      next: (res) => {
+        if (this.postDetails) {
+          this.postDetails.privacy = newPrivacy;
+        }
+      },
+    });
+  }
 }

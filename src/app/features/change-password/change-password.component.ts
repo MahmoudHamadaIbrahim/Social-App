@@ -1,11 +1,10 @@
 import { FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { AuthService } from './../../core/auth/services/auth.service';
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-change-password',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.css',
 })
