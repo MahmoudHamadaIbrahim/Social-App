@@ -1,5 +1,5 @@
 📱 Social Media Dashboard – Angular 17+
-Live Demo: 🔗 social-app-mahmoud-hamada.vercel.app
+
 
 A robust, feature-rich social media interactions platform built with Angular 17, focusing on real-time engagement, state persistence, and seamless user experience.
 
@@ -26,3 +26,6 @@ Styling: Tailwind CSS / FontAwesome / Flowbite
 State Management: RxJS (Observables & Subjects)
 
 Deployment: Vercel (Optimized for SPA routing with custom 404 handling)
+
+
+Live Demo: 🔗 social-app-mahmoud-hamada.vercel.app
