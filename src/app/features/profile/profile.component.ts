@@ -123,7 +123,7 @@ export class ProfileComponent implements OnInit {
       const formData = new FormData();
       formData.append('cover', file);
 
-      this.profileService.uploadProfileImage(formData).subscribe({
+      this.profileService.uploadCoverImage(formData).subscribe({
         next: (res) => {
           if (this.currentUserId) {
             this.getProfileData(this.currentUserId);
