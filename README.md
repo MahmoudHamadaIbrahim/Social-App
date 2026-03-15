@@ -28,4 +28,4 @@ State Management: RxJS (Observables & Subjects)
 Deployment: Vercel (Optimized for SPA routing with custom 404 handling)
 
 
-Live Demo: 🔗 social-app-mahmoud-hamada.vercel.app
+Live Demo: 🔗 https://social-app-mahmoud-hamada.vercel.app
