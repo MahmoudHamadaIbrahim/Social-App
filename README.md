@@ -1,51 +1,28 @@
-Social Media Interaction & Notification System
+📱 Social Media Dashboard – Angular 17+
+Live Demo: 🔗 social-app-mahmoud-hamada.vercel.app
 
-Overview
+A robust, feature-rich social media interactions platform built with Angular 17, focusing on real-time engagement, state persistence, and seamless user experience.
 
-This project is a sophisticated, real-time Social Media Dashboard built using Angular 17+. It is designed to handle core social interactions such as post commenting and user notifications with a focus on seamless user experience, high performance, and clean architecture. The application demonstrates the power of standalone components, reactive programming with RxJS, and modern styling with Tailwind CSS.
+🚀 Key Features:
+🔥 Intelligent Engagement System: Engineered a smart Like/Share system that maintains user state persistence using RxJS and LocalStorage validation—ensuring likes stay active even after hard refreshes.
 
-Core Features
-1. Dynamic Notification Management
-The notification system is built to keep users engaged with real-time updates.
+🔔 Dynamic Notification System: Real-time updates for likes, comments, and shares with optimized "All/Unread" filtering logic.
 
-Filtering Logic: Users can switch between "All" and "Unread" notifications. This involves complex state management to ensure that the UI reflects the correct data subset fetched from the REST API.
+💬 Advanced Commenting Module: Full CRUD operations (Create, Read, Update, Delete) with nested components and automated visibility toggles.
 
-Visual Cues: Notifications are categorized by type (Likes, Comments, Shares) using distinct icons and color-coded indicators for better accessibility.
+🛡️ Granular Privacy Controls: Implemented dynamic post visibility settings (Public, Followers, Only Me) integrated with reactive logic.
 
-2. Advanced Commenting System (CRUD)
-A fully functional comment module that allows users to interact with posts dynamically.
+🕒 Custom Angular Pipes: Developed TimeAgo and Date pipes for human-readable, real-time timestamps across the feed.
 
-Operations: Supports full Create, Read, Update, and Delete operations.
+🎨 Responsive & Modern UI: Crafted with Tailwind CSS and Flowbite for a pixel-perfect, mobile-first experience with smooth micro-interactions.
 
-Interactive UI: Features a custom-built, context-aware action menu for editing and deleting comments, designed to mimic major social platforms like Facebook and LinkedIn.
+🔌 Enterprise API Integration: Fully integrated with RESTful APIs using Angular HttpClient, Interceptors for Auth, and custom logic to handle single-post deep linking.
 
-User-Centric Design: Implemented "Click-Outside" logic and transparent backdrops to ensure menus close intuitively.
+🛠️ Tech Stack:
+Framework: Angular 17+ (Standalone Architecture)
 
-3. Custom Data Transformation
-To enhance readability, I developed custom Angular Pipes:
+Styling: Tailwind CSS / FontAwesome / Flowbite
 
-TimeAgo Pipe: Automatically transforms UTC timestamps into human-readable formats (e.g., "5 minutes ago").
+State Management: RxJS (Observables & Subjects)
 
-Date Formatting: Precise formatting for older notifications to display specific dates and times clearly.
-
-Technical Implementation
-Tech Stack
-Frontend: Angular 17 (Standalone Components, Signals, and Control Flow Syntax).
-
-Styling: Tailwind CSS for responsive and utility-first design.
-
-State Management: RxJS Observables for handling asynchronous data streams.
-
-HTTP Client: Integrated with Interceptors for global error handling and authentication token injection.
-
-Challenges & Solutions
-During development, I encountered a significant challenge with GitHub Pages deployment regarding base-href paths. I resolved this by configuring the build process to recognize the subfolder structure of GitHub repositories. Additionally, I optimized API calls by implementing local UI updates (Optimistic UI) to ensure the application feels snappy even on slower connections.
-
-How to Run
-Clone the repository.
-
-Run npm install to install dependencies.
-
-Use ng serve for a dev server.
-
-Navigate to http://localhost:4200/.
+Deployment: Vercel (Optimized for SPA routing with custom 404 handling)
