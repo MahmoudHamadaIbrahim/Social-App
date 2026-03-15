@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedroute = inject(ActivatedRoute);
 
   userData: any = {};
   isLoading: boolean = true;
@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   postList: any[] = [];
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.activatedroute.paramMap.subscribe((params) => {
       this.currentUserId = params.get('id');
 
       if (!this.currentUserId) {
@@ -95,6 +95,11 @@ export class ProfileComponent implements OnInit {
 
       this.profileService.uploadProfileImage(formData).subscribe({
         next: (res) => {
+          if (this.currentUserId) {
+            this.getProfileData(this.currentUserId); // تحديث بيانات البروفايل (الاسم، الصورة، المتابعين)
+            this.getUserPosts(this.currentUserId); // إعادة تحميل البوستات بالصورة الجديدة
+          }
+
           if (res.user?.photo) {
             this.userData.photo = res.user.photo;
           }
