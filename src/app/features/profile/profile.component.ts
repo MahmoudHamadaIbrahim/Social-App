@@ -96,12 +96,41 @@ export class ProfileComponent implements OnInit {
       this.profileService.uploadProfileImage(formData).subscribe({
         next: (res) => {
           if (this.currentUserId) {
-            this.getProfileData(this.currentUserId); // تحديث بيانات البروفايل (الاسم، الصورة، المتابعين)
-            this.getUserPosts(this.currentUserId); // إعادة تحميل البوستات بالصورة الجديدة
+            this.getProfileData(this.currentUserId);
+            this.getUserPosts(this.currentUserId);
           }
 
           if (res.user?.photo) {
             this.userData.photo = res.user.photo;
+          }
+        },
+      });
+    }
+  }
+
+  uploadCoverImage(event: any): void {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        if (this.userData) {
+          this.userData.cover = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('cover', file);
+
+      this.profileService.uploadProfileImage(formData).subscribe({
+        next: (res) => {
+          if (this.currentUserId) {
+            this.getProfileData(this.currentUserId);
+            this.getUserPosts(this.currentUserId);
+          }
+          if (res.user?.cover) {
+            this.userData.cover = res.user.cover;
           }
         },
       });
