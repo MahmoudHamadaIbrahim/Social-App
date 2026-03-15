@@ -70,7 +70,10 @@ export class FeedContentComponent implements OnInit {
           return {
             ...post,
             isLiked: post.likes
-              ? post.likes.some((u: any) => u._id === this.currentUser._id)
+              ? post.likes.some((u: any) => {
+                  const likedUserId = u._id || u;
+                  return likedUserId === this.currentUser?._id;
+                })
               : false,
             likesCount: post.likesCount || (post.likes ? post.likes.length : 0),
           };

@@ -1,14 +1,15 @@
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Post } from './../../core/models/post.interface';
 import { PostsService } from './../../core/services/posts.service';
-import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { CommentsComponent } from '../feed/components/feed-content/components/comments/comments.component';
+import { TimeAgoPipe } from '../../shared/pipes/time-ago-pipe';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [ReactiveFormsModule, CommentsComponent, RouterLink],
+  imports: [ReactiveFormsModule, CommentsComponent, RouterLink, TimeAgoPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.css',
 })
@@ -45,6 +46,11 @@ export class DetailsComponent implements OnInit {
     this.postsService.getSinglePost(this.postId).subscribe({
       next: (res) => {
         this.postDetails = res.data.post;
+        if (this.postDetails && this.postDetails.likes) {
+          this.postDetails.isLiked = this.postDetails.likes.some(
+            (like: any) => (like._id || like) === this.userId,
+          );
+        }
         this.openCommentsByDefault();
       },
     });

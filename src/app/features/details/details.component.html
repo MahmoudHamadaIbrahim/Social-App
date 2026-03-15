@@ -19,7 +19,7 @@
                     <div class="flex items-center text-[13px] text-slate-500 mt-0.5 gap-1">
                         <span>@{{postDetails.user.username}}</span>
                         <span>&middot;</span>
-                        <span>{{postDetails.createdAt}}</span>
+                        <span>{{postDetails.createdAt | timeAgo }}</span>
                         <span>&middot;</span>
                         <div class="p-0 w-fit items-center text-sm rounded-base">
                             @if (postDetails.user._id === userId) {
@@ -200,7 +200,8 @@
                                 {{selectedPostForShare.user.name}}
                             </h4>
                             <span class="text-[12px] text-slate-500 mt-0.5">
-                                {{selectedPostForShare.user.username}} &middot; {{selectedPostForShare.createdAt}}
+                                {{selectedPostForShare.user.username}} &middot; {{selectedPostForShare.createdAt |
+                                timeAgo }}
                             </span>
                         </div>
                     </div>
